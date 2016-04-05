@@ -1,0 +1,222 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Javascript Homework 02</title>
+	<meta charset="utf-8" />
+
+    <style type="text/css">
+        #txtName{
+            margin-bottom: 15px;
+        }
+        #ddlStyle{
+            margin-bottom: 15px;
+        }
+        #bStyle{
+            margin-left: 50px;
+        }
+        #bName{
+            margin-left: 15px;
+        }
+        #chkPepperoni{
+            margin-bottom: 15px;
+        }
+        table {
+            margin-left: auto;
+            margin-right: auto;
+            width: 500px;
+        }
+        h1{text-align:center;}
+
+        #btnSubmit{
+            margin-left:140px;
+        }
+
+        textarea{
+            margin-left: 50px;
+        }
+    </style>
+
+</head>
+<body>
+    <h1>RVCC Pizzeria</h1>
+    <table>
+        <tr>
+            <td>
+                <b id="bName">Name:</b><input type="text" id="txtName"/>
+                <b>Pickup:</b><input type="radio" id="rbPickup" value="Pickup"/>
+                <b>Delivery:</b><input type="radio" id="rbDeliver" value="Delivery" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b id="bStyle">Style:</b>
+                <select id="ddlStyle">
+                    <option value="Deep Dish">Deep Dish</option>
+                    <option value="Tomato Pie">Tomato Pie</option>
+                    <option value="Thin Crust">Thin Crust</option>
+                    <option value="Stuffed Crust">Stuffed Crust</option>
+                </select>
+                <b>Size:</b>
+                <select id="ddlSize">
+                    <option value="Xtra Large">Xtra Large</option>
+                    <option value="Large">Large</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Small">Small</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>Toppings:</b>
+                <input type="checkbox" id="chkPepperoni" value="pepperoni"/>Pepperoni
+                <input type="checkbox" id="chkOlive" value="olives"/>Black Olives
+                <input type="checkbox" id="chkMeatball" value="meatball"/>Meatball
+                <input type="checkbox" id="chkSausage" value="sausage"/>Sausage
+            </td>
+        </tr>
+        <tr>
+            <td id="btnTd">
+                <input type="button" id="btnSubmit" value="Submit" />
+
+                <input type="button" id="btnClear" value="Clear" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <textarea id="txtOrder" disabled rows="10" cols="40">
+                </textarea>
+            </td>
+        </tr>
+    </table>
+
+
+    <script>
+        var $ = function (id) {
+            return document.getElementById(id);
+        }
+
+        window.onload = function () {
+            $('btnSubmit').onclick = processOrder;
+            $('btnClear').onclick = clearOrder;
+        }
+
+        function processOrder() {
+            //check name is set
+            var name = processName();
+            if (name == "") {
+                alert("Must include Name");
+                return;
+            } else {
+                name = processName();
+            }
+            //check delivery type is set
+            var deliveryType = processDeliveryType();
+            if (deliveryType == '') {
+                alert("Please choose a delivery type");
+                return;
+            } else {
+                deliveryType = processDeliveryType();
+            }
+            //run size style and toppings functions
+            var size = processSize();
+            var style = processStyle();
+            var toppings = processToppings();
+            //create completed order
+            var completeOrder = '';
+            completeOrder = completeOrder + name + "\n";
+            completeOrder = completeOrder + deliveryType + "\n";
+            completeOrder = completeOrder + size + " ";
+            completeOrder = completeOrder + style + "\n";
+            completeOrder = completeOrder + "with" + toppings;
+            //confirm completed order
+            if (confirm("Please confirm the following order for: " + completeOrder) == true) {
+
+                completeOrder = completeOrder + "\n\n\t" + "Your order has been placed.";
+                $('txtOrder').value = completeOrder;
+
+            } else {
+                completeOrder = "*Order not confirmed*";
+                $('txtOrder').value = completeOrder;
+
+            }
+        }
+        //return name
+        function processName() {
+            var name = $("txtName").value;
+                return name;
+        }
+        //return delivery type
+        function processDeliveryType() {
+            var deliveryType = '';
+            if ($("rbPickup").checked) {
+                deliveryType = $('rbPickup').value;
+            } else {
+                if ($("rbDeliver").checked) {
+                    deliveryType = $('rbDeliver').value;
+                }
+            }
+            return deliveryType;
+        }
+        // return style
+        function processStyle() {
+            var style = $('ddlStyle').value;
+            return style;
+        }
+        // return size
+        function processSize() {
+            var size = $('ddlSize').value;
+            return size;
+        }
+        //return toppings
+        function processToppings() {
+            toppings = '';
+            if ($("chkPepperoni").checked) {
+                toppings = " " + $("chkPepperoni").value;
+            }
+
+            if ($("chkOlive").checked) {
+                toppings += " " + $("chkOlive").value;
+            }
+
+            if ($("chkMeatball").checked) {
+                toppings += " " + $("chkMeatball").value;
+            }
+
+            if ($("chkSausage").checked) {
+                toppings += " " + $("chkSausage").value;
+            }
+            if (toppings == '') {
+                toppings = " no toppings";
+            }
+            return toppings;
+        }
+
+
+
+        //clear order
+        function clearOrder() {
+            $("txtName").value = "";
+            $("rbDeliver").checked = false;
+            $("rbPickup").checked = false;
+            $("ddlStyle").selected = resetStyle();
+            function resetStyle() {
+                $("ddlStyle").value = "Deep Dish";
+                return;
+            }
+            
+            $("ddlSize").selected = resetSize();
+            function resetSize() {
+                $("ddlSize").value = "Xtra Large";
+                return;
+            }
+
+            $("chkPepperoni").checked = false;
+            $("chkOlive").checked = false;
+            $("chkMeatball").checked = false;
+            $("chkSausage").checked = false;
+
+        }
+
+    </script>
+</body>
+</html>
